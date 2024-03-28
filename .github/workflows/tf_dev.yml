@@ -1,19 +1,19 @@
 name: Terraform Deploy
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'infrastructure/dev/**'
-      - '.github/workflows/tf_dev.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'infrastructure/dev/**'
-      - '.github/workflows/tf_dev.yml'
-  workflow_dispatch:
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'infrastructure/dev/**'
+#       - '.github/workflows/tf_dev.yml'
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - 'infrastructure/dev/**'
+#       - '.github/workflows/tf_dev.yml'
+#   workflow_dispatch:
 
 permissions:
   id-token: write

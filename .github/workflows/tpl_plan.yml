@@ -31,6 +31,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
           chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
+          export AWS_REGION=${{ inputs.aws-region }}
 
           echo $AWS_ACCESS_KEY_ID
           echo $AWS_SECRET_ACCESS_KEY
