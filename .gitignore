@@ -45,3 +45,4 @@ terraform.rc
 !chart/**/*.tar.gz
 
 *.external_modules
+**/.terraform*

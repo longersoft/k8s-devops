@@ -15,7 +15,7 @@ jobs:
   TerraformApply:
     runs-on: ubuntu-latest
     name: Terraform Apply
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v4
