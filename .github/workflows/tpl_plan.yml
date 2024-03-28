@@ -23,6 +23,10 @@ jobs:
       #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
       #     aws-region: ${{ input.aws-region }}
 
+      # - name: Sts GetCallerIdentity
+      #   run: |
+      #     aws sts get-caller-identity
+
       - name: Authenticate with AWS
         run: |
           echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
@@ -33,7 +37,6 @@ jobs:
         run: |
           export AWS_REGION=${{ inputs.aws-region }}
           aws s3 ls
-          aws sts get-caller-identity
 
       - name: Git clone the repository
         uses: actions/checkout@v4
