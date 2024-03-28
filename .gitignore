@@ -32,3 +32,16 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+*.bak
+
+# VSCode
+**/.vscode
+
+# Idea
+**/.idea
+
+# Helm chart dependencies
+!chart/**/*.tar.gz
+
+*.external_modules

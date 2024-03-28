@@ -1,0 +1,44 @@
+name: Terraform Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/dev/**'
+      - '.github/workflows/tf_dev.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/dev/**'
+      - '.github/workflows/tf_dev.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  QualityCheck:
+    name: Quality Check
+    uses: ./.github/workflows/tpl_quality.yml
+    with:
+      environment: "dev"
+
+  TerraformPlan:
+    name: Terraform Plan
+    needs: [QualityCheck]
+    uses: ./.github/workflows/tpl_plan.yml
+    with:
+      environment: "dev"
+      aws-region: "us-east-2"
+
+  TerraformApply:
+    name: Terraform Apply
+    needs: [TerraformPlan]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/tpl_apply.yml
+    with:
+      environment: "dev"
+      aws-region: "us-east-2"
