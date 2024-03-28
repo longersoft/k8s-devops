@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      aws-region:
+        required: false
+        type: string
+
+env:
+  AWS_REGION: "us-east-2"
+
+jobs:
+  TerraformPlan:
+    runs-on: ubuntu-latest
+    name: Terraform Plan
+    needs: [QualityCheck]
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::012345678910:role/GitHubAction-AssumeRoleWithAction
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+
+      - name: Terraform Plan
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          terraform init
+          terraform plan -out ${{ github.run_id }}-plan.out
+  
+      - name: Upload Artifacts
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform_plan
+          path: |-
+            ./infrastructure/${{ inputs.environment }}/${{ github.run_id }}-plan.out

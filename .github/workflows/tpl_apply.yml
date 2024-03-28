@@ -1,0 +1,45 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      aws-region:
+        required: false
+        type: string
+
+env:
+  AWS_REGION: "us-east-2"
+
+jobs:
+  TerraformApply:
+    runs-on: ubuntu-latest
+    name: Terraform Apply
+    needs: [TerraformPlan]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::012345678910:role/GitHubAction-AssumeRoleWithAction
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
+
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+      
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform_plan
+          path: ./infrastructure/${{ inputs.environment }}
+
+      - name: Terraform Apply
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          terraform init
+          terraform apply ${{ github.run_id }}-plan.out

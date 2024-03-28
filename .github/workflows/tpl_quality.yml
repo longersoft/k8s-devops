@@ -1,0 +1,72 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  QualityCheck:
+    runs-on: ubuntu-latest
+    name: Quality Check
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.4.0
+
+      - name: Terraform Format
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: terraform fmt -recursive -check
+      
+      - name: Terraform Validate
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Install TFLint
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          curl -L https://github.com/terraform-linters/tflint/releases/latest/download/tflint_linux_amd64.zip -o tflint.zip
+          unzip tflint.zip
+          chmod +x tflint
+          mv tflint /usr/local/bin/
+
+          # Check if the plugins directory exists; if not, create it
+          mkdir -p ~/.tflint.d/plugins
+
+          # Generate a unique cache key based on .tflint.hcl file
+          ln -snf ../.tflint.hcl .tflint.hcl
+          cache_key=$(md5sum .tflint.hcl | awk '{ print $1 }')
+          echo "cache_key=$cache_key"
+
+          # Restore TFLint plugins cache if available
+          if [ -d ${{ runner.workspace }}/tflint-plugins/$cache_key ]; then
+            cp -r ${{ runner.workspace }}/tflint-plugins/$cache_key/* ~/.tflint.d/plugins/
+          fi
+
+      - name: Run TFLint
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          tflint --version
+          tflint --init
+          tflint --recursive
+
+          # Save the TFLint plugins to the cache
+          mkdir -p ${{ runner.workspace }}/tflint-plugins/$cache_key
+          cp -r ~/.tflint.d/plugins/* ${{ runner.workspace }}/tflint-plugins/$cache_key
+
+      - name: Install Checkov
+        run: |
+          pip3 install checkov
+          pip3 install -U checkov to update
+
+      - name: Run Checkov
+        working-directory: ./infrastructure/${{ inputs.environment }}
+        run: |
+          ln -snf ../.checkov.yaml .checkov.yaml
+          checkov --framework=terraform --download-external-modules=true --config-file .checkov.yaml -d .
