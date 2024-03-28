@@ -31,15 +31,17 @@ terraform apply --auto-approve
 ## Step 3
 Download and install `kubectl` from this [page](https://kubernetes.io/docs/tasks/tools/).  
 Download and install `helm` from this [page](https://helm.sh/docs/intro/install/).  
-Add Helm Repository: Add the ArgoCD Helm repository to Helm:
+
+## Step 4
+Install ArgoCD with Helm:
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 helm search repo argocd
 helm show values argo/argo-cd --version 3.35.4 > ./charts/argocd/default-values.yaml
 ```
-Create new file for argocd, for example `./minikube/terraform/values/argocd.yaml`
-Install ArgoCD with Helm:
+Create new file for argocd, for example `./minikube/terraform/values/argocd.yaml`  
+Then, install ArgoCD:
 ```
 kubectl create namespace argocd
 helm install argocd argo/argo-cd -n argocd -f ./minikube/terraform/values/argocd.yaml
@@ -54,5 +56,32 @@ Get the password:
 ```
 kubectl -n argocd get secret argocd-secret -o jsonpath="{.data.password}" | base64 -d
 ```
-Access to the ArgoCD admin page: [http://localhost:8080](http://localhost:8080)
+Access to the ArgoCD admin page: [http://localhost:8080](http://localhost:8080)  
 Username: `admin`
+
+## Step 5
+Install PostgreSQL with Helm:
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl create namespace postgresql
+helm install postgresql bitnami/postgresql -n postgresql
+kubectl get pods -n postgresql
+kubectl port-forward svc/postgresql 5432:5432
+```
+The info:
+```
+Host: postgresql.postgresql.svc.cluster.local - Read/Write connection
+User: postgres
+Pass: export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgresql postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+```
+To connect to your database run the following command:
+```
+kubectl run postgresql-client --rm --tty -i --restart='Never' --namespace postgresql --image docker.io/bitnami/postgresql:16.20-debian-12-r10 --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+--command -- psql --host postgresql -U postgres -d postgres -p 5432
+```
+To connect to your database from outside the cluster execute the following commands:
+```
+kubectl port-forward --namespace postgresql svc/postgresql 5432:5432 & 
+PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
+```
