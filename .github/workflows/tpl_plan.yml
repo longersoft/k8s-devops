@@ -11,9 +11,6 @@ on:
         required: false
         type: string
 
-env:
-  AWS_REGION: "us-east-2"
-
 jobs:
   TerraformPlan:
     runs-on: ubuntu-latest
@@ -31,10 +28,10 @@ jobs:
           echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
           chmod +x aws_env_variables.sh
           source ./aws_env_variables.sh
-          echo $AWS_ACCESS_KEY_ID
 
       - name: Sts GetCallerIdentity
         run: |
+          export AWS_REGION=${{ input.aws-region }}
           aws sts get-caller-identity
 
       - name: Git clone the repository

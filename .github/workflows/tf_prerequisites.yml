@@ -31,7 +31,7 @@ jobs:
     needs: [QualityCheck]
     uses: ./.github/workflows/tpl_plan.yml
     with:
-      work-directory: "dev"
+      work-directory: "0_prerequisites"
       aws-region: "us-east-2"
     secrets:
       AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
@@ -42,7 +42,7 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/tpl_apply.yml
     with:
-      work-directory: "dev"
+      work-directory: "0_prerequisites"
       aws-region: "us-east-2"
     secrets:
       AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
