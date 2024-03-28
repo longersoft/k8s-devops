@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'infrastructure/dev/**'
-      - '.github/workflows/tf_dev.yml'
+      - 'infrastructure/0_prerequisites/**'
+      - '.github/workflows/tf_prerequisites.yml'
   pull_request:
     branches:
       - main
     paths:
-      - 'infrastructure/dev/**'
-      - '.github/workflows/tf_dev.yml'
+      - 'infrastructure/0_prerequisites/**'
+      - '.github/workflows/tf_prerequisites.yml'
   workflow_dispatch:
 
 permissions:
@@ -24,14 +24,14 @@ jobs:
     name: Quality Check
     uses: ./.github/workflows/tpl_quality.yml
     with:
-      work-directory: "dev"
+      work-directory: "0_prerequisites"
 
   TerraformPlan:
     name: Terraform Plan
     needs: [QualityCheck]
     uses: ./.github/workflows/tpl_plan.yml
     with:
-      work-directory: "dev"
+      work-directory: "0_prerequisites"
       aws-region: "us-east-2"
     secrets:
       AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
@@ -42,7 +42,7 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/tpl_apply.yml
     with:
-      work-directory: "dev"
+      work-directory: "0_prerequisites"
       aws-region: "us-east-2"
     secrets:
       AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}

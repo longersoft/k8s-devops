@@ -1,39 +1,43 @@
 on:
   workflow_call:
+    secrets:
+      AWS_ENV_VARIABLES:
+        required: true
     inputs:
-      environment:
+      work-directory:
         required: true
         type: string
       aws-region:
         required: false
         type: string
 
-env:
-  AWS_REGION: "us-east-2"
-
 jobs:
   TerraformPlan:
     runs-on: ubuntu-latest
     name: Terraform Plan
-    needs: [QualityCheck]
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::012345678910:role/GitHubAction-AssumeRoleWithAction
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: arn:aws:iam::012345678910:role/GitHubAction-AssumeRoleWithAction
+      #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
+      #     aws-region: ${{ input.aws-region }}
 
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
+      # - name: Sts GetCallerIdentity
+      #   run: |
+      #     aws sts get-caller-identity
 
       - name: Git clone the repository
         uses: actions/checkout@v4
 
       - name: Terraform Plan
-        working-directory: ./infrastructure/${{ inputs.environment }}
+        working-directory: ./infrastructure/${{ inputs.work-directory }}
         run: |
+          # Remove this block while the block config aws get un-commented
+          echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
+          chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
+          export AWS_REGION=${{ inputs.aws-region }}
+
           terraform init
           terraform plan -out ${{ github.run_id }}-plan.out
   
@@ -43,4 +47,4 @@ jobs:
         with:
           name: terraform_plan
           path: |-
-            ./infrastructure/${{ inputs.environment }}/${{ github.run_id }}-plan.out
+            ./infrastructure/${{ inputs.work-directory }}/${{ github.run_id }}-plan.out
