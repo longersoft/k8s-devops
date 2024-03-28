@@ -15,7 +15,6 @@ jobs:
   TerraformPlan:
     runs-on: ubuntu-latest
     name: Terraform Plan
-    needs: [QualityCheck]
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
