@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      environment:
+      work-directory:
         required: true
         type: string
       aws-region:
@@ -35,10 +35,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform_plan
-          path: ./infrastructure/${{ inputs.environment }}
+          path: ./infrastructure/${{ inputs.work-directory }}
 
       - name: Terraform Apply
-        working-directory: ./infrastructure/${{ inputs.environment }}
+        working-directory: ./infrastructure/${{ inputs.work-directory }}
         run: |
           terraform init
           terraform apply ${{ github.run_id }}-plan.out

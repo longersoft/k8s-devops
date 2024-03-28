@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      environment:
+      work-directory:
         required: true
         type: string
       aws-region:
@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Terraform Plan
-        working-directory: ./infrastructure/${{ inputs.environment }}
+        working-directory: ./infrastructure/${{ inputs.work-directory }}
         run: |
           terraform init
           terraform plan -out ${{ github.run_id }}-plan.out
@@ -42,4 +42,4 @@ jobs:
         with:
           name: terraform_plan
           path: |-
-            ./infrastructure/${{ inputs.environment }}/${{ github.run_id }}-plan.out
+            ./infrastructure/${{ inputs.work-directory }}/${{ github.run_id }}-plan.out
