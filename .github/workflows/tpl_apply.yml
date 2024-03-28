@@ -15,7 +15,7 @@ jobs:
   TerraformApply:
     runs-on: ubuntu-latest
     name: Terraform Apply
-    # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     steps:
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v4
@@ -45,10 +45,5 @@ jobs:
           chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
           export AWS_REGION=${{ inputs.aws-region }}
 
-          pwd
-          ls -la
-          ls -la ${{ github.run_id }}-plan.out
-
           terraform init
-          terraform plan
-          # terraform apply ${{ github.run_id }}-plan.out
+          terraform apply ${{ github.run_id }}-plan.out

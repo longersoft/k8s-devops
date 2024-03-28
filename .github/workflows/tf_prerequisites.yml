@@ -39,7 +39,7 @@ jobs:
   TerraformApply:
     name: Terraform Apply
     needs: [TerraformPlan]
-    # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/tpl_apply.yml
     with:
       work-directory: "0_prerequisites"
