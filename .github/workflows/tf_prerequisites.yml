@@ -6,13 +6,13 @@ on:
       - main
     paths:
       - 'infrastructure/0_prerequisites/**'
-      - '.github/workflows/tf_dev.yml'
+      - '.github/workflows/tf_prerequisites.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'infrastructure/0_prerequisites/**'
-      - '.github/workflows/tf_dev.yml'
+      - '.github/workflows/tf_prerequisites.yml'
   workflow_dispatch:
 
 permissions:
