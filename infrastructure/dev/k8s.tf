@@ -679,7 +679,7 @@ resource "aws_iam_role" "eks_configserver_role" {
         Condition = {
           StringEquals = {
             "${replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
-            "${replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", "")}:sub" = local.eks_serviceaccount_configserver_test
+            "${replace(aws_iam_openid_connect_provider.eks_oidc.url, "https://", "")}:sub" = local.eks_serviceaccount_configserver_qa
           }
         }
       }

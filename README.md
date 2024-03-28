@@ -40,24 +40,24 @@ helm repo update
 helm search repo argocd
 helm show values argo/argo-cd --version 3.35.4 > ./charts/argocd/default-values.yaml
 ```
-Create new file for argocd, for example `./minikube/terraform/values/argocd.yaml`  
 Then, install ArgoCD:
 ```
 kubectl create namespace argocd
-helm install argocd argo/argo-cd -n argocd -f ./minikube/terraform/values/argocd.yaml
+helm install argocd argo/argo-cd -n argocd
 ```
 Get the link to access to ArgoCD UI:
 ```
 minikube service argocd-server -n argocd
 Or:
-kubectl port-forward service/argocd-server -n argocd 8080:80
+kubectl port-forward service/argocd-server -n argocd 8080:443
 ```
 Get the password:
 ```
-kubectl -n argocd get secret argocd-secret -o jsonpath="{.data.password}" | base64 -d
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 Access to the ArgoCD admin page: [http://localhost:8080](http://localhost:8080)  
-Username: `admin`
+Username: `admin`  
+Password: `decoded-above`
 
 ## Step 5
 Install PostgreSQL with Helm:
