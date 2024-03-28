@@ -28,11 +28,6 @@ jobs:
       #   run: |
       #     aws sts get-caller-identity
 
-      - name: Sts GetCallerIdentity
-        run: |
-          export AWS_REGION=${{ inputs.aws-region }}
-          aws s3 ls
-
       - name: Git clone the repository
         uses: actions/checkout@v4
       
@@ -49,6 +44,10 @@ jobs:
           echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
           chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
           export AWS_REGION=${{ inputs.aws-region }}
+
+          pwd
+          ls -la
+          ls -la ${{ github.run_id }}-plan.out
 
           terraform init
           terraform plan
