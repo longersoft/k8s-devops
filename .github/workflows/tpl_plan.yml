@@ -27,24 +27,17 @@ jobs:
       #   run: |
       #     aws sts get-caller-identity
 
-      - name: Authenticate with AWS
-        run: |
-          echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
-          chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
-          export AWS_REGION=${{ inputs.aws-region }}
-
-          echo $AWS_ACCESS_KEY_ID
-          echo $AWS_SECRET_ACCESS_KEY
-          
-          aws s3 ls
-          aws sts get-caller-identity
-
       - name: Git clone the repository
         uses: actions/checkout@v4
 
       - name: Terraform Plan
         working-directory: ./infrastructure/${{ inputs.work-directory }}
         run: |
+          # Remove this block while the block config aws get un-commented
+          echo "${{ secrets.AWS_ENV_VARIABLES }}" > aws_env_variables.sh
+          chmod +x aws_env_variables.sh && source ./aws_env_variables.sh
+          export AWS_REGION=${{ inputs.aws-region }}
+
           terraform init
           terraform plan -out ${{ github.run_id }}-plan.out
   
