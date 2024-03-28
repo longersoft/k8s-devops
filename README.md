@@ -27,3 +27,32 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
+
+## Step 3
+Download and install `kubectl` from this [page](https://kubernetes.io/docs/tasks/tools/).  
+Download and install `helm` from this [page](https://helm.sh/docs/intro/install/).  
+Add Helm Repository: Add the ArgoCD Helm repository to Helm:
+```
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+helm search repo argocd
+helm show values argo/argo-cd --version 3.35.4 > ./charts/argocd/default-values.yaml
+```
+Create new file for argocd, for example `./minikube/terraform/values/argocd.yaml`
+Install ArgoCD with Helm:
+```
+kubectl create namespace argocd
+helm install argocd argo/argo-cd -n argocd -f ./minikube/terraform/values/argocd.yaml
+```
+Get the link to access to ArgoCD UI:
+```
+minikube service argocd-server -n argocd
+Or:
+kubectl port-forward service/argocd-server -n argocd 8080:80
+```
+Get the password:
+```
+kubectl -n argocd get secret argocd-secret -o jsonpath="{.data.password}" | base64 -d
+```
+Access to the ArgoCD admin page: [http://localhost:8080](http://localhost:8080)
+Username: `admin`
