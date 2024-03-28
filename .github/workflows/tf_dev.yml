@@ -24,7 +24,7 @@ jobs:
     name: Quality Check
     uses: ./.github/workflows/tpl_quality.yml
     with:
-      environment: "dev"
+      work-directory: "dev"
 
   TerraformPlan:
     name: Terraform Plan
