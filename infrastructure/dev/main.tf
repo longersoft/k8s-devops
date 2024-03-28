@@ -10,7 +10,7 @@ locals {
   }
   region_code = lookup(local.region_codes, data.aws_region.current.name, "unknown")
 
-  app_name = "cs"
+  app_name = "test"
   prefix   = "${local.env}-${local.region_code}-${local.app_name}"
 
   vpc_cidr             = "172.16.0.0/16"
@@ -32,17 +32,17 @@ locals {
   eks_addon_ebs_csi_driver_version     = "v1.28.0-eksbuild.1"
   eks_serviceaccount_alb               = "system:serviceaccount:kube-system:aws-load-balancer-controller"
   eks_serviceaccount_configserver_dev  = "system:serviceaccount:dev:dev-application-configserver"
-  eks_serviceaccount_configserver_test = "system:serviceaccount:test:test-application-configserver"
+  eks_serviceaccount_configserver_qa   = "system:serviceaccount:qa:qa-application-configserver"
 
   ecr_list_repos = [
-    "cs-app",
+    "frontend",
+    "backend",
   ]
-  all_accounts = {
-    "cs-dev" = "012345678910"
+  ecr_read_only_accounts = {
+    "test-dev" = "012345678910"
   }
-  ecr_read_only_accounts = local.all_accounts
   ecr_full_access_accounts = {
-    "cs-dev" = "012345678910"
+    "admin-dev" = "012345678910"
   }
   ecr_principals_full_access      = [for key, value in local.ecr_full_access_accounts : "arn:aws:iam::${value}:root"]
   ecr_principals_read_only_access = [for key, value in local.ecr_read_only_accounts : "arn:aws:iam::${value}:root"]
