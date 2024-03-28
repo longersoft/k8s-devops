@@ -1,4 +1,4 @@
-# How to create infrastructure
+# How to setup infrastructure
 
 ## Prerequisites
 Setup authenticate with AWS for pipelines:  
@@ -15,5 +15,15 @@ This step need to run from begining by manual, or via GitHub Action.
 ```
 cd ./infrastructure/0_prerequisites
 terraform init
+terraform apply --auto-approve
+```
+
+## Step 2
+The pipelines will be auto triggered for each environment as same as the folder name.  
+Or we can run it as manual:
+```
+cd ./infrastructure/dev
+terraform init
+terraform plan
 terraform apply --auto-approve
 ```
