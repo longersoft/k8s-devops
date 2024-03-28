@@ -35,7 +35,9 @@ jobs:
 
       - name: Sts GetCallerIdentity
         run: |
-          export AWS_REGION=${{ inputs.aws-region }}
+          echo $AWS_ACCESS_KEY_ID
+          echo $AWS_SECRET_ACCESS_KEY
+          
           aws s3 ls
 
       - name: Git clone the repository
