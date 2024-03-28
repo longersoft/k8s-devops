@@ -30,10 +30,6 @@ terraform {
 provider "aws" {
   region = "us-east-2"
 
-  # assume_role {
-  #   role_arn = "arn:aws:iam::905418377632:role/terraform-execution-role"
-  # }
-
   default_tags {
     tags = {
       Environment = "dev"
