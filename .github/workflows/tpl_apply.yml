@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      AWS_ENV_VARIABLES:
+        required: true
     inputs:
       work-directory:
         required: true
@@ -7,9 +10,6 @@ on:
       aws-region:
         required: false
         type: string
-
-env:
-  AWS_REGION: "us-east-2"
 
 jobs:
   TerraformApply:
@@ -22,7 +22,7 @@ jobs:
       #   with:
       #     role-to-assume: arn:aws:iam::012345678910:role/GitHubAction-AssumeRoleWithAction
       #     role-session-name: GitHub_to_AWS_via_FederatedOIDC
-      #     aws-region: ${{ env.AWS_REGION }}
+      #     aws-region: ${{ input.aws-region }}
 
       - name: Authenticate with AWS
         run: |

@@ -31,8 +31,10 @@ jobs:
     needs: [QualityCheck]
     uses: ./.github/workflows/tpl_plan.yml
     with:
-      environment: "dev"
+      work-directory: "dev"
       aws-region: "us-east-2"
+    secrets:
+      AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
 
   TerraformApply:
     name: Terraform Apply
@@ -40,5 +42,7 @@ jobs:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/tpl_apply.yml
     with:
-      environment: "dev"
+      work-directory: "dev"
       aws-region: "us-east-2"
+    secrets:
+      AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}

@@ -33,6 +33,8 @@ jobs:
     with:
       work-directory: "dev"
       aws-region: "us-east-2"
+    secrets:
+      AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
 
   TerraformApply:
     name: Terraform Apply
@@ -42,3 +44,5 @@ jobs:
     with:
       work-directory: "dev"
       aws-region: "us-east-2"
+    secrets:
+      AWS_ENV_VARIABLES: ${{ secrets.AWS_ENV_VARIABLES }}
