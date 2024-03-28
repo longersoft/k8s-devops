@@ -2,7 +2,7 @@
 
 ## Prerequisites
 Setup authenticate with AWS for pipelines:  
-Option 1: Follow this page to setup the IAM roles which used for GitHub Action.  
+Option 1: Follow this [page](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) to setup the IAM roles which used for GitHub Action.  
 Option 2: Goto repo settings > Add new secret with the name AWS_ENV_VARIABLES and the values copied from the AWS access portal.  
 The format will be:  
 ```

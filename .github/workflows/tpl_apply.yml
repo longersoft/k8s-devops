@@ -32,7 +32,7 @@ jobs:
 
       - name: Sts GetCallerIdentity
         run: |
-          export AWS_REGION=${{ input.aws-region }}
+          export AWS_REGION=${{ inputs.aws-region }}
           aws sts get-caller-identity
 
       - name: Git clone the repository
