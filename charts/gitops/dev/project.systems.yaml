@@ -14,7 +14,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   roles:
   - name: read-only
-    description: Read-only privileges to Infrastructure
+    description: Read-only privileges to systems
     policies:
     - p, proj:systems-project:read-only, applications, get, systems/*, allow
     groups:

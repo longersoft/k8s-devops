@@ -94,4 +94,22 @@ Goto repo k8s-devops settings > Add new secret with the name `DEVOPS_DEPLOY_TOKE
 Goto application repos (k8s-frontend, k8s-backend) settings > Add new secret with the name `DEVOPS_DEPLOY_TOKEN` with content is private-key.  
 
 ## Step 7
-Create application with ArgoCD
+Create application on ArgoCD by run this command:
+```
+kubectl create namespace systems
+kubectl apply -f ./k8s-devops/charts/gitops/dev/app.application.yaml
+```
+Or create application by manual from the ArgoCD UI.  
+Config webhook from repo `k8s-devops` to allow ArgoCD keep watching the events from the `charts/application/values.yaml`.
+
+## Step 8
+Install Prometheus and Grafana for monitoring Kubertest cluster and system:
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack
+helm install grafana grafana/grafana
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+minikube service grafana --url
+```
