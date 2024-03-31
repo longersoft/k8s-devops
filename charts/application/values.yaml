@@ -1,7 +1,7 @@
 frontend:
   image:
     repository: longersoft/k8s-frontend
-    tag: a060966
+    tag: 6680350
   # ingress:
   #   enabled: true
   #   className: "alb"
