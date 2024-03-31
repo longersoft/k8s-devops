@@ -85,3 +85,13 @@ To connect to your database from outside the cluster execute the following comma
 kubectl port-forward --namespace postgresql svc/postgresql 5432:5432 & 
 PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
 ```
+
+## Step 6
+For all application repos (k8s-frontend, k8s-backend):  
+Goto repo settings > Add new secret with the name `DOCKER_USERNAME` and `DOCKER_PASSWORD` to access, build and push docker image to DockerHub.  
+Generate new SSH key.  
+Goto repo k8s-devops settings > Add new secret with the name `DEVOPS_DEPLOY_TOKEN` with content is public-key.   
+Goto application repos (k8s-frontend, k8s-backend) settings > Add new secret with the name `DEVOPS_DEPLOY_TOKEN` with content is private-key.  
+
+## Step 7
+Create application with ArgoCD

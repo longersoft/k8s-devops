@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: qa-project
+  namespace: systems
+spec:
+  sourceRepos:
+  - 'git@github.com:longersoft/k8s-devops.git'
+  destinations:
+  - namespace: 'qa'
+    server: 'https://kubernetes.default.svc'
+  roles:
+  - name: all
+    description: QA have all privileges to Test
+    policies:
+    - p, proj:qa-project:all, applications, *, qa/*, allow
+    groups:
+    - argocd-qa
+  - name: guest
+    description: guest have all read privileges to Test
+    policies:
+    - p, proj:qa-project:guest, applications, get, qa/*, allow
+    groups:
+    - argocd-guest

@@ -1,0 +1,11 @@
+apiVersion: v2
+name: backend
+description: A Helm chart for Backend
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+dependencies:
+  - name: service-common
+    repository: file://../common
+    alias: gateway
+    version: 0.0.1

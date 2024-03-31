@@ -1,0 +1,10 @@
+apiVersion: v2
+name: secrets-store-csi-driver-provider-aws
+description: A Helm chart for Secret Store CSI AWS Provider Kubernetes
+type: application
+version: 0.3.6
+appVersion: "0.3.6"
+dependencies:
+  - name: secrets-store-csi-driver-provider-aws
+    repository: https://aws.github.io/secrets-store-csi-driver-provider-aws
+    version: 0.3.6

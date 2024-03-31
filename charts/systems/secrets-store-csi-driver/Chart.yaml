@@ -1,0 +1,10 @@
+apiVersion: v2
+name: secrets-store-csi-driver
+description: A Helm chart for Secret Store CSI Kubernetes
+type: application
+version: 1.4.1
+appVersion: "1.4.1"
+dependencies:
+  - name: secrets-store-csi-driver
+    repository: https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+    version: 1.4.1

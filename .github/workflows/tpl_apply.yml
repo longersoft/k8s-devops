@@ -5,11 +5,11 @@ on:
         required: true
     inputs:
       work-directory:
+        type: string
         required: true
-        type: string
       aws-region:
-        required: false
         type: string
+        required: false
 
 jobs:
   TerraformApply:

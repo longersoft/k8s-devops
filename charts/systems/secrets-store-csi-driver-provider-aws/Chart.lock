@@ -1,0 +1,6 @@
+dependencies:
+- name: secrets-store-csi-driver-provider-aws
+  repository: https://aws.github.io/secrets-store-csi-driver-provider-aws
+  version: 0.3.6
+digest: sha256:e822bc4bd1b286505afb682982d011d107b6af08f676422b803e31a13d942551
+generated: "2024-03-10T12:51:24.842274+07:00"

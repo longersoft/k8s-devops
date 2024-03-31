@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: qa-application
+  namespace: systems
+spec:
+  syncPolicy:
+    automated:
+      selfHeal: true
+  project: qa-project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: qa
+  source:
+    targetRevision: qa
+    repoURL: git@github.com:longersoft/k8s-devops.git
+    path: chart/application
+    helm:
+      valueFiles:
+        - "values.qa.yaml"

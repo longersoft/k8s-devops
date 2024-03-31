@@ -1,0 +1,16 @@
+apiVersion: v2
+name: discovery
+description: A Helm chart for Applications
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+dependencies:
+  - name: frontend
+    repository: file://../services/frontend
+    alias: k8s-frontend
+    version: 0.0.1
+    
+  # - name: backend
+  #   repository: file://./services/backend
+  #   alias: k8s-backend
+  #   version: 0.0.1

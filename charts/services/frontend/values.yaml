@@ -1,0 +1,96 @@
+global:
+  common:
+    env: {}
+    annotations: {}
+    labels: {}
+    podAnnotations: {}
+    podLabels: {}
+    revisionHistoryLimit: 1
+
+revisionHistoryLimit: 3
+replicaCount: 1
+
+image:
+  repository: longersoft/k8s-frontend
+  pullPolicy: IfNotPresent
+  tag: "0.0.1"
+  ports:
+    http: 3000
+    others: {}
+  
+env: {}
+
+imagePullSecrets: []
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  annotations: {}
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+configuration:
+  data: {}
+  secrets: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+secretProviderClass:
+  secretObjects: []
+  parameters: {}
