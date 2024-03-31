@@ -1,0 +1,96 @@
+frontend:
+  image:
+    repository: longersoft/k8s-frontend
+    tag: a060966
+  # ingress:
+  #   enabled: true
+  #   className: "alb"
+  #   annotations:
+  #     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:012345678910:certificate/df8363dd-c302-4b44-b548-f7954470d1fc
+  #     alb.ingress.kubernetes.io/group.name: test-dot-dev
+  #     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS": 443}]'
+  #     alb.ingress.kubernetes.io/load-balancer-name: test-dot-dev
+  #     alb.ingress.kubernetes.io/scheme: internet-facing
+  #     alb.ingress.kubernetes.io/ssl-redirect: "443"
+  #     alb.ingress.kubernetes.io/tags: Environment=qa,Application=test
+  #     alb.ingress.kubernetes.io/target-type: ip
+  #     alb.ingress.kubernetes.io/group.order: "1"
+  #   hosts:
+  #     - host: sub.test.dev
+  #       paths:
+  #         - path: /
+  #           pathType: Prefix
+  #   tls:
+  #   -  hosts:
+  #       - sub.test.dev
+
+backend:
+  image:
+    repository: longersoft/k8s-backend:a060966
+    tag: a060966
+  # env:
+  #   APPLICATION_API_ALLOWEDORIGIN: https://sub.test.dev,http://localhost:3000
+  #   SPRING_CONFIG_IMPORT: optional:configserver:http://{{ .Release.Name }}-configserver
+  # ingress:
+  #   enabled: true
+  #   className: "alb"
+  #   annotations:
+  #     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:905418377632:certificate/df8363dd-c302-4b44-b548-f7954470d1fc
+  #     alb.ingress.kubernetes.io/group.name: test-dot-dev
+  #     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS": 443}]'
+  #     alb.ingress.kubernetes.io/load-balancer-name: test-dot-dev
+  #     alb.ingress.kubernetes.io/scheme: internet-facing
+  #     alb.ingress.kubernetes.io/ssl-redirect: "443"
+  #     alb.ingress.kubernetes.io/tags: Environment=qa,Application=test
+  #     alb.ingress.kubernetes.io/target-type: ip
+  #     alb.ingress.kubernetes.io/group.order: "0"
+  #   hosts:
+  #     - host: backend.test.dev
+  #       paths:
+  #         - path: /v1
+  #           pathType: Prefix
+  #     - host: backend.test.dev
+  #       paths:
+  #         - path: /
+  #           pathType: Prefix
+  #   tls:
+  #   -  hosts:
+  #       - backend.test.dev
+  #       - sub.test.dev
+
+configserver:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::012345678910:role/test-eks-configserver-role
+  volumes:
+    - name: secrets
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+
+  volumeMounts:
+    - name: secrets
+      mountPath: /var/aws/secrets
+      readOnly: true
+  
+  secretProviderClass:
+    secretObjects:
+    # secrets for backend
+      - secretName: backend
+        type: Opaque
+        data:
+        - objectName: applicationProperties
+          key: application.properties
+      - secretName: worker
+        type: Opaque
+        data:
+          - objectName: applicationProperties
+            key: application.properties
+    parameters:
+      region: us-east-2
+      objects: |
+        - objectName: "test/qa/application"
+          objectType: secretsmanager
+          objectAlias: applicationProperties
+
+discovery: {}

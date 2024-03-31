@@ -1,0 +1,97 @@
+{{- define  "common.deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+  {{- with .Values.global.common.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  revisionHistoryLimit: {{ default .Values.global.common.revisionHistoryLimit .Values.revisionHistoryLimit  }}
+  selector:
+    matchLabels:
+      {{- include "common.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with (merge .Values.podAnnotations .Values.global.common.podAnnotations) }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common.labels" . | nindent 8 }}
+        {{- with (merge .Values.podLabels .Values.global.common.podLabels) }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "common.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ default .Values.service.port .Values.image.ports.http }}
+              protocol: TCP
+            {{- with .Values.image.ports.others }}
+            {{- toYaml . | nindent 12 -}}
+            {{- end }}
+          {{- if or .Values.env .Values.global.common.env }}
+          env:
+          {{- range $key, $value  := (merge .Values.env .Values.global.common.env) }}
+            - name: {{ $key | quote }}
+              value:  {{ tpl $value $ | quote }}
+          {{- end }}
+          {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- range . }}
+        {{- $volume := . }}
+        - 
+        {{- with .csi }}
+        {{- with .driver }}
+        {{- if eq . "secrets-store.csi.k8s.io" }}
+          {{- $volumeAttributes := dict "csi" (dict "volumeAttributes" (dict "secretProviderClass"  (include "common.fullname" $ ))) }}
+          {{- $volume := merge $volume $volumeAttributes }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+          {{- toYaml $volume | nindent 10 }}
+        {{- end }}   
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dev-project
+  namespace: systems
+spec:
+  sourceRepos:
+  - 'git@github.com:longersoft/k8s-devops.git'
+  destinations:
+  - namespace: 'dev'
+    server: 'https://kubernetes.default.svc'
+  roles:
+  - name: all
+    description: developer have all privileges to Dev
+    policies:
+    - p, proj:dev-project:all, applications, *, dev/*, allow
+    groups:
+    - argocd-dev
+  - name: guest
+    description: guest have all read privileges to Dev
+    policies:
+    - p, proj:dev-project:guest, applications, get, dev/*, allow
+    groups:
+    - argocd-guest

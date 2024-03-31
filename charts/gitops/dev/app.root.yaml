@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-application
+  namespace: systems
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: systems
+  sources:
+    - targetRevision: dev
+      repoURL: git@github.com:longersoft/k8s-devops.git
+      path: chart/gitops/dev
+    - targetRevision: qa
+      repoURL: git@github.com:longersoft/k8s-devops.git
+      path: chart/gitops/qa

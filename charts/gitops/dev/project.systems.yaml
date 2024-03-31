@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: systems-project
+  namespace: systems
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+  - 'git@github.com:longersoft/k8s-devops.git'
+  destinations:
+  - namespace: 'kube-system'
+    server: 'https://kubernetes.default.svc'
+  roles:
+  - name: read-only
+    description: Read-only privileges to systems
+    policies:
+    - p, proj:systems-project:read-only, applications, get, systems/*, allow
+    groups:
+    - argocd-dev
+    - argocd-guest

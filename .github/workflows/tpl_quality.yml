@@ -2,8 +2,8 @@ on:
   workflow_call:
     inputs:
       work-directory:
-        required: true
         type: string
+        required: true
 
 jobs:
   QualityCheck:

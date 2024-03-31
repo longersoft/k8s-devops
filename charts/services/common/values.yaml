@@ -1,0 +1,108 @@
+global:
+  common:
+    env: {}
+    annotations: {}
+    labels: {}
+    podAnnotations: {}
+    podLabels: {}
+    ingressAnnotations: {}
+    revisionHistoryLimit: 1
+
+revisionHistoryLimit: 3
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: ""
+  ports:
+    # http: 80
+    others: {}
+  
+env: {}
+  
+imagePullSecrets: []
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  annotations: {}
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+configuration:
+  data: {}
+  secrets: {}
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+secretProviderClass:
+  secretObjects: []
+    # - secretName: document
+    #   type: Opaque
+    #   data:
+    #   - objectName: applicationProperties
+    #     key: application.properties
+  parameters: {}
+    # region: us-east-2
+    # objects: |
+    #   - objectName: "/dev/document/properties"
+    #     objectType: ssmparameter
+    #     objectAlias: applicationProperties

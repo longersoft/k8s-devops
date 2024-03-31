@@ -1,0 +1,19 @@
+{{- define "common.configuration.data" }}
+{{- if .Values.configuration.data }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.fullname" . }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+  {{- with .Values.global.common.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data: 
+{{- range $key, $value :=  .Values.configuration.data }}
+    {{ $key }}: |-
+{{- tpl $value $ | nindent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}

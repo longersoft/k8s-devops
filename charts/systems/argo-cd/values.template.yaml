@@ -1,0 +1,43 @@
+global:
+  domain: argocd.test.dev
+
+argo-cd:
+  server:
+    ingress:
+      enabled: true
+      annotations:
+        alb.ingress.kubernetes.io/load-balancer-name: test-dot-dev
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:012345678910:certificate/df8363dd-c302-4b44-b548-f7954470d1fc
+        alb.ingress.kubernetes.io/group.name: test-dot-dev
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS": 443}]'
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/ssl-redirect: "443"
+        alb.ingress.kubernetes.io/tags: Environment=dev,Application=test
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      ingressClassName: alb
+      tls: true
+  configs:
+    cm:
+      oidc.config: |
+        name: Admin SSO
+        issuer: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_xxx
+        logoutURL: https://sso.admin.test.dev/logout?client_id=CLIENT_ID&logout_uri=https://argocd.test.dev/logout
+        clientID: CLIENT_ID
+        clientSecret: CLIENT_SECRET
+        requestedIDTokenClaims:
+          groups:
+            essential: true
+        requestedScopes:
+          - openid
+          - profile
+          - email
+      "admin.enabled": false
+    rbac:
+      scopes: '[cognito:groups]'
+      policy.csv: |
+        g, argocd-admin, role:admin
+    secret:
+      githubSecret: GITHUB_WEBHOOK_SECRET
+  dex:
+    enabled: false
