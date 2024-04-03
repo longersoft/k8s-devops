@@ -165,3 +165,5 @@ resource "aws_db_instance" "aurora_db" {
 output "rds_endpoint" {
   value = aws_db_instance.aurora_db.endpoint
 }
+
+# Force run pipeline
