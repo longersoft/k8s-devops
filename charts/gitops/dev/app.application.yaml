@@ -12,9 +12,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: dev
   source:
-    targetRevision: dev
-    repoURL: git@github.com:longersoft/k8s-devops.git
-    path: chart/application
+    targetRevision: HEAD #main
+    repoURL: https://github.com/longersoft/k8s-devops.git #git@github.com:longersoft/k8s-devops.git
+    path: charts/k8s-frontend #charts/application
     # helm:
     #   valueFiles:
     #     - "values.yaml" # | "values.dev.yaml"

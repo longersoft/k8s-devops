@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'chart/**'
+      - 'charts/**'
       - '.github/workflows/helm_check.yml'
   pull_request:
     branches:
       - main
     paths:
-      - 'chart/**'
+      - 'charts/**'
       - '.github/workflows/helm_check.yml'
   workflow_dispatch:
 

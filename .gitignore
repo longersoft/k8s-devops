@@ -42,7 +42,7 @@ terraform.rc
 **/.idea
 
 # Helm chart dependencies
-!chart/**/*.tar.gz
+!charts/**/*.tar.gz
 
 *.external_modules
 **/.terraform*

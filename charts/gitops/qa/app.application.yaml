@@ -14,7 +14,7 @@ spec:
   source:
     targetRevision: qa
     repoURL: git@github.com:longersoft/k8s-devops.git
-    path: chart/application
+    path: charts/application
     helm:
       valueFiles:
         - "values.qa.yaml"

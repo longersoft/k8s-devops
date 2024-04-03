@@ -11,7 +11,7 @@ spec:
   sources:
     - targetRevision: dev
       repoURL: git@github.com:longersoft/k8s-devops.git
-      path: chart/gitops/dev
+      path: charts/gitops/dev
     - targetRevision: qa
       repoURL: git@github.com:longersoft/k8s-devops.git
-      path: chart/gitops/qa
+      path: charts/gitops/qa
