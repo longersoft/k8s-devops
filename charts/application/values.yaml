@@ -27,7 +27,7 @@ frontend:
 backend:
   image:
     repository: longersoft/k8s-backend:a060966
-    tag: a060966
+    tag: d9b625f
   # env:
   #   APPLICATION_API_ALLOWEDORIGIN: https://sub.test.dev,http://localhost:3000
   #   SPRING_CONFIG_IMPORT: optional:configserver:http://{{ .Release.Name }}-configserver
